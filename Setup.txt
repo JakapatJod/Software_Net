@@ -1,0 +1,41 @@
+sudo apt update
+sudo apt-get install curl
+sudo apt install default-jre
+sudo apt install default-jdk
+
+sudo apt-get install -y openvswitch-switch
+sudo apt-get install -y mininet
+sudo apt-get install -y libxml2-utils
+wget https://nexus.opendaylight.org/content/repositories/opendaylight.release/org/opendaylight/integration/opendaylight/15.3.0/opendaylight-15.3.0.tar.gz
+tar xvzf opendaylight-15.3.0.tar.gz
+cd opendaylight-15.3.0/
+./bin/karaf
+
+feature:install odl-mdsal-apidocs
+feature:install odl-restconf
+feature:install odl-openflowplugin-flow-services-rest
+feature:install odl-openflowplugin-app-table-miss-enforcer
+feature:install odl-openflowplugin-app-topology
+feature:install odl-openflowplugin-app-topology-manager
+feature:install odl-openflowplugin-app-lldp-speaker
+feature:install odl-openflowplugin-app-topology-lldp-discovery
+
+sudo apt-get install ansible git aptitude
+git clone https://github.com/containernet/containernet.git
+cd containernet/ansible/
+sudo ansible-playbook -i "localhost," -c local install.yml
+sudo apt-get install openvswitch-switch
+
+@ หากติดปัญหา
+sudo docker ps -a
+sudo docker stop mn.r1
+sudo docker rm mn.r1
+sudo service bird restart
+
+Create the ODL BGL Instance
+curl -v --user "admin": "admin" -H "Accept: application/xml" -H "Content-Type: application/xml" -X POST http://localhost:8181/restconf/config/openconfig network-instance:network-instances/network-instance/global-bgp/openconfig network-instance:protocols/-d @bgp_router.xml
+
+Create bgp neighbor
+curl -v --user "admin": "admin" -H "Accept: application/xml" -H "Content-Type: application/xml" -X POST http://localhost:8181/restconf/config/openconfig network-instance:network-instances/network-instance/global-bgp/openconfig network-instance:protocols/protocol/openconfig-policy-types:BGP/bgp-odl router/bgp/neighbors/-d @bgp_neighbor.xml
+
+
